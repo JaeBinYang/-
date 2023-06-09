@@ -371,7 +371,10 @@ sql = """SELECT S_DA_ID,COUNT(DISTINCT 유저) AS user_cnt
          GROUP BY S_DA_ID """
 user_clust_cnt = spark.sql(sql).cache()
 
-big_cluster = user_clust_cnt.filter(user_clust_cnt.user_cnt >= 50000).select('S_DA_ID').collect()
+user_cnt_max_value = user_clust_cnt.agg({"user_cnt": "max"}).collect()[0]
+user_cnt_max_value = user_cnt_max_value["max(user_cnt)"]
+
+big_cluster = user_clust_cnt.filter(user_clust_cnt.user_cnt >= user_cnt_max_value).select('SEGDA_ID').collect()
 
 for cluster in big_cluster:
     cluster_id = str(cluster['S_DA_ID'])
