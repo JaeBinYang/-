@@ -1,3 +1,3 @@
 # JaeBin
 
-JB's project
+## 개요
